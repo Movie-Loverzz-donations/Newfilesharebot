@@ -1,17 +1,8 @@
-<p align="center">
-  <img src="https://graph.org/file/f62fde5714f4896beec32.jpg" alt="3 FSub File Store by codeflix bots">
-</p>
-<h2 align="center">
-
-<p align="center">
 
 
 # 𝟹 ғsᴜʙ ғɪʟᴇ sʜᴀʀɪɴɢ ʙᴏᴛ ᴍᴏᴅɪғɪᴇᴅ ʙʏ ᴄᴏᴅᴇғʟɪx ʙᴏᴛs 
 
 ##
-
-**If you need any more modes in repo or If you find out any bugs, mention in <b>[sᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ](https://github.com/weebs_support)  ➻  [ᴍɪᴋᴇʏ](https://t.me/sewxiy) </b>**
-</b>
 
 
 
