@@ -27,8 +27,6 @@ OWNER_ID = int(os.environ.get("OWNER_ID", "949657126"))
 #Port
 PORT = os.environ.get("PORT", "8089")
 
-FILE_AUTO_DELETE = int(os.getenv("FILE_AUTO_DELETE", "1800")) # auto delete in seconds
-
 #Database 
 DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://maxine11229:2d0NThJZDM9iSu48@cluster0.9qvbj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 DB_NAME = os.environ.get("DATABASE_NAME", "maxine11229")
