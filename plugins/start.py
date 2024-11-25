@@ -37,7 +37,8 @@ async def start_command(client: Client, message: Message):
             try:
                 start = int(int(argument[1]) / abs(client.db_channel.id))
                 end = int(int(argument[2]) / abs(client.db_channel.id))
-            except:
+            except Exception as e:
+                print(f"Error decoding IDs: {e}")
                 return
             if start <= end:
                 ids = range(start,end+1)
@@ -52,15 +53,19 @@ async def start_command(client: Client, message: Message):
         elif len(argument) == 2:
             try:
                 ids = [int(int(argument[1]) / abs(client.db_channel.id))]
-            except:
+            except Exception as e:
+                print(f"Error decoding IDs: {e}")
                 return
         temp_msg = await message.reply("ᴡᴀɪᴛ ʙʀᴏᴏ...")
         try:
             messages = await get_messages(client, ids)
-        except:
+        except Exception as e:
             await message.reply_text("ɪ ꜰᴇᴇʟ ʟɪᴋᴇ ᴛʜᴇʀᴇ ɪꜱ ꜱᴏᴍᴇᴛʜɪɴɢ ᴡʀᴏɴɢ..!")
+            print(f"Error getting messages: {e}")
             return
         await temp_msg.delete()
+
+         codeflix_msgs = []  # List to keep track of sent messages
 
         for msg in messages:
 
@@ -80,10 +85,12 @@ async def start_command(client: Client, message: Message):
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
-            except:
+            codeflix_msgs.append(copied_msg)
+            except Exception as e:
+                print(f"Failed to send message: {e}")
                 pass
 
-         k = await client.send_message(chat_id=message.from_user.id, text=f"<b><i>This File is deleting automatically in {file_auto_delete}. Forward in your Saved Messages..!</i></b>")
+        k = await client.send_message(chat_id=message.from_user.id, text=f"<b><i>This File is deleting automatically in {file_auto_delete}. Forward in your Saved Messages..!</i></b>")
 
          # Schedule the file deletion
         asyncio.create_task(delete_files(codeflix_msgs, client, k))
