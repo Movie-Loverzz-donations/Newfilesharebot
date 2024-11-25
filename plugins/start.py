@@ -23,71 +23,68 @@ async def start_command(client: Client, message: Message):
     if not await present_user(id):
         try:
             await add_user(id)
-        except:
+        except Exception as e:
+            print(f"Error adding user: {e}")
             pass
+
     text = message.text
-    if len(text)>7:
+    if len(text) > 7:
         try:
             base64_string = text.split(" ", 1)[1]
-        except:
-            return
-        string = await decode(base64_string)
-        argument = string.split("-")
-        if len(argument) == 3:
+            string = await decode(base64_string)  # Decoding logic
+            argument = string.split("-")
+            
+            # Handling the case where there are 3 arguments
+            if len(argument) == 3:
+                try:
+                    start = int(int(argument[1]) / abs(client.db_channel.id))
+                    end = int(int(argument[2]) / abs(client.db_channel.id))
+                    ids = range(start, end + 1) if start <= end else range(start, end - 1, -1)
+                except Exception as e:
+                    print(f"Error parsing IDs: {e}")
+                    return
+            # Handling case with 2 arguments
+            elif len(argument) == 2:
+                try:
+                    ids = [int(int(argument[1]) / abs(client.db_channel.id))]
+                except Exception as e:
+                    print(f"Error parsing ID: {e}")
+                    return
+
+            # Processing messages
+            temp_msg = await message.reply("ᴡᴀɪᴛ ʙʀᴏᴏ...")
             try:
-                start = int(int(argument[1]) / abs(client.db_channel.id))
-                end = int(int(argument[2]) / abs(client.db_channel.id))
+                messages = await get_messages(client, ids)
             except Exception as e:
-                print(f"Error decoding IDs: {e}")
+                await message.reply_text("ɪ ꜰᴇᴇʟ ʟɪᴋᴇ ᴛʜᴇʀᴇ ɪꜱ ꜱᴏᴍᴇᴛʜɪɴɢ ᴡʀᴏɴɢ..!")
+                print(f"Error getting messages: {e}")
                 return
-            if start <= end:
-                ids = range(start,end+1)
-            else:
-                ids = []
-                i = start
-                while True:
-                    ids.append(i)
-                    i -= 1
-                    if i < end:
-                        break
-        elif len(argument) == 2:
-            try:
-                ids = [int(int(argument[1]) / abs(client.db_channel.id))]
-            except Exception as e:
-                print(f"Error decoding IDs: {e}")
-                return
-        temp_msg = await message.reply("ᴡᴀɪᴛ ʙʀᴏᴏ...")
-        try:
-            messages = await get_messages(client, ids)
-        except Exception as e:
-            await message.reply_text("ɪ ꜰᴇᴇʟ ʟɪᴋᴇ ᴛʜᴇʀᴇ ɪꜱ ꜱᴏᴍᴇᴛʜɪɴɢ ᴡʀᴏɴɢ..!")
-            print(f"Error getting messages: {e}")
-            return
-        await temp_msg.delete()
-        codeflix_msgs = []  # List to keep track of sent messages
+            await temp_msg.delete()
 
-        for msg in messages:
+            codeflix_msgs = []  # To store successfully copied messages
 
-            if bool(CUSTOM_CAPTION) & bool(msg.document):
-                caption = CUSTOM_CAPTION.format(previouscaption = "" if not msg.caption else msg.caption.html, filename = msg.document.file_name)
-            else:
-                caption = "" if not msg.caption else msg.caption.html
+            # Loop to copy each message
+            for msg in messages:
+                try:
+                    if bool(CUSTOM_CAPTION) & bool(msg.document):
+                        caption = CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, filename=msg.document.file_name)
+                    else:
+                        caption = "" if not msg.caption else msg.caption.html
 
-            if DISABLE_CHANNEL_BUTTON:
-                reply_markup = msg.reply_markup
-            else:
-                reply_markup = None
+                    reply_markup = None if DISABLE_CHANNEL_BUTTON else msg.reply_markup
 
-            try:
-                await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
-                await asyncio.sleep(0.5)
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-                await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
-            codeflix_msgs.append(copied_msg)
-            except Exception as e:
-                print(f"Failed to send message: {e}")
-                pass
+                    # Copy the message to the user's chat
+                    copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
+                    codeflix_msgs.append(copied_msg)
+                    await asyncio.sleep(0.5)
+
+                except FloodWait as e:
+                    await asyncio.sleep(e.x)
+                    copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
+                    codeflix_msgs.append(copied_msg)
+                except Exception as e:
+                    print(f"Failed to send message: {e}")
+                    pass
 
         k = await client.send_message(chat_id=message.from_user.id, text=f"<b><i>This File is deleting automatically in {file_auto_delete}. Forward in your Saved Messages..!</i></b>")
 
