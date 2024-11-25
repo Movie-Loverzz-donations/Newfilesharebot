@@ -64,8 +64,7 @@ async def start_command(client: Client, message: Message):
             print(f"Error getting messages: {e}")
             return
         await temp_msg.delete()
-
-         codeflix_msgs = []  # List to keep track of sent messages
+        codeflix_msgs = []  # List to keep track of sent messages
 
         for msg in messages:
 
