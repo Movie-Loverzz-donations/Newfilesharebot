@@ -97,8 +97,11 @@ class Bot(Client):
 
     def run(self):
         import asyncio
-        asyncio.run(self.start())  # Ensure this is called appropriately
+        try:
+            asyncio.run(self.start())  # Ensure this is called appropriately
+        except (KeyboardInterrupt, SystemExit):
+            self.LOGGER.info("Bot stopped manually.")
 
-# Example usage of the Bot class
 if __name__ == "__main__":
-    Bot().run()
+    bot = Bot()
+    bot.run()
