@@ -64,6 +64,9 @@ class Bot(Client):
         bind_address = "0.0.0.0"
         await web.TCPSite(app, bind_address, PORT).start()
 
+        # Keep the bot running
+        await self.idle()
+
     async def handle_force_sub_channels(self):
         # Handle Force Sub Channel 1
         if FORCESUB_CHANNEL:
