@@ -22,11 +22,7 @@ class Bot(Client):
         import asyncio
         asyncio.run(self.start())
 
-    async def start(self):
-        await super().start()
-        usr_bot_me = await self.get_me()
-        self.uptime = datetime.now()
-
+    
         if FORCESUB_CHANNEL:
             try:
                 link = (await self.get_chat(FORCESUB_CHANNEL)).invite_link
