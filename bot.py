@@ -18,6 +18,10 @@ class Bot(Client):
         self.uptime = datetime.now()
         print(f"Bot started as {usr_bot_me.username}")
 
+    async def get_invite_link(self, channel_id):
+        link = (await self.get_chat(channel_id)).invite_link
+        return link
+
     def run(self):
         import asyncio
         asyncio.run(self.start())
