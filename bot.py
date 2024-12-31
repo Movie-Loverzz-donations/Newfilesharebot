@@ -9,6 +9,7 @@ from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
 import logging
+import asyncio
 
 from config import API_HASH, APP_ID, LOGGER, TG_BOT_TOKEN, TG_BOT_WORKERS, FORCESUB_CHANNEL, FORCESUB_CHANNEL2, FORCESUB_CHANNEL3, CHANNEL_ID, PORT
 
@@ -65,7 +66,8 @@ class Bot(Client):
         await web.TCPSite(app, bind_address, PORT).start()
 
         # Keep the bot running
-        await self.idle()
+        while True:
+            await asyncio.sleep(3600)  # Sleep for 1 hour
 
     async def handle_force_sub_channels(self):
         # Handle Force Sub Channel 1
@@ -99,7 +101,6 @@ class Bot(Client):
         self.LOGGER.info("Bot stopped.")
 
     def run(self):
-        import asyncio
         try:
             asyncio.run(self.start())  # Ensure this is called appropriately
         except (KeyboardInterrupt, SystemExit):
