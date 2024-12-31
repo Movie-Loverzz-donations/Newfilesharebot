@@ -8,6 +8,7 @@ from pyrogram import Client
 from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
+import logging
 
 from config import API_HASH, APP_ID, LOGGER, TG_BOT_TOKEN, TG_BOT_WORKERS, FORCESUB_CHANNEL, FORCESUB_CHANNEL2, FORCESUB_CHANNEL3, CHANNEL_ID, PORT
 
@@ -20,6 +21,8 @@ class Bot(Client):
             bot_token=TG_BOT_TOKEN,
             workers=TG_BOT_WORKERS
         )
+        self.LOGGER = logging.getLogger(__name__)
+        logging.basicConfig(level=logging.INFO)
 
     async def start(self):
         await super().start()
@@ -36,14 +39,14 @@ class Bot(Client):
             test = await self.send_message(chat_id=db_channel.id, text="Test Message")
             await test.delete()
         except Exception as e:
-            self.LOGGER(__name__).warning(e)
-            self.LOGGER(__name__).warning(f"Make sure bot is Admin in DB Channel, and double-check the CHANNEL_ID value. Current value: {CHANNEL_ID}")
-            self.LOGGER(__name__).info("\nBot stopped. Join https://t.me/weebs_support for support")
+            self.LOGGER.warning(e)
+            self.LOGGER.warning(f"Make sure bot is Admin in DB Channel, and double-check the CHANNEL_ID value. Current value: {CHANNEL_ID}")
+            self.LOGGER.info("\nBot stopped. Join https://t.me/weebs_support for support")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"Bot running..!\n\nCreated by \nhttps://t.me/Animes_X_Hunters")
-        self.LOGGER(__name__).info(r""" \n\n       
+        self.LOGGER.info(f"Bot running..!\n\nCreated by \nhttps://t.me/Animes_X_Hunters")
+        self.LOGGER.info(r""" \n\n       
   _____ ____  _____  ______ ______ _      _______   ______   ____ _______ _____ 
  / ____/ __ \|  __ \|  ____|  ____| |    |_   _\ \ / /  _ \ / __ \__   __/ ____|
 | |   | |  | | |  | | |__  | |__  | |      | |  \ V /| |_) | |  | | | | | (___  
@@ -82,15 +85,15 @@ class Bot(Client):
                 link = (await self.get_chat(channel_id)).invite_link
             setattr(self, f"invitelink{'' if channel_id == FORCESUB_CHANNEL else '2' if channel_id == FORCESUB_CHANNEL2 else '3'}", link)
         except Exception as e:
-            self.LOGGER(__name__).warning(e)
-            self.LOGGER(__name__).warning("Bot can't export invite link from Force Sub Channel!")
-            self.LOGGER(__name__).warning(f"Please double-check the {channel_id} value and make sure the bot is admin in the channel with invite users via link permission. Current Force Sub Channel Value: {channel_id}")
-            self.LOGGER(__name__).info("\nBot stopped. Join https://t.me/weebs_support for support")
+            self.LOGGER.warning(e)
+            self.LOGGER.warning("Bot can't export invite link from Force Sub Channel!")
+            self.LOGGER.warning(f"Please double-check the {channel_id} value and make sure the bot is admin in the channel with invite users via link permission. Current Force Sub Channel Value: {channel_id}")
+            self.LOGGER.info("\nBot stopped. Join https://t.me/weebs_support for support")
             sys.exit()
 
     async def stop(self, *args):
         await super().stop()
-        self.LOGGER(__name__).info("Bot stopped.")
+        self.LOGGER.info("Bot stopped.")
 
     def run(self):
         import asyncio
