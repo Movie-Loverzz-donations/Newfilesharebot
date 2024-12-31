@@ -12,6 +12,7 @@ from datetime import datetime
 from config import API_HASH, APP_ID, LOGGER, TG_BOT_TOKEN, TG_BOT_WORKERS, FORCESUB_CHANNEL, FORCESUB_CHANNEL2, FORCESUB_CHANNEL3, CHANNEL_ID, PORT
 
 class Bot(Client):
+class Bot(Client):
     async def start(self):
         await super().start()
         usr_bot_me = await self.get_me()
@@ -24,7 +25,8 @@ class Bot(Client):
 
     def run(self):
         import asyncio
-        asyncio.run(self.start())
+        asyncio.run(self.start())  # Ensure this is called appropriately
+
 
     
         if FORCESUB_CHANNEL:
